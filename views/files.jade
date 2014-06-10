@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  h1= title
+
+  p Welcome to #{title}
+
+  input#file_id(type="file")
+  input#submit_id(type="submit")
+  div#progress
+
+  br
+  br
+
+  table#table_id
+    thead
+      tr
+        th
+        //th ID
+        th UploadDate
+        th [direct]
+        th proxy-revalidate
+        th must-revalidate
+        th no-cache
+        th no-store
+        th no-transform
+        th public
+        th private
+        th max-age
+        th Content-Type
+        th Length
+        th
+        th FileName
+        th
+
+  script(src='/javascripts/table.js')
+

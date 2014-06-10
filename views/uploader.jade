@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    form(action=url, enctype='multipart/form-data', method='post')
+      input(type='hidden', name='key', value=keyname)
+      input(type='hidden', name='AWSAccessKeyId', value=awskeyid)
+      input(type='hidden', name='acl', value="private")
+      input(type='hidden', name='success_action_status', value="201")
+      input(type='hidden', name='policy', value=policy)
+      input(type='hidden', name='signature', value=signature)
+      input(type='hidden', name='Content-Type', value="image/png")
+      input(type='file', name='file', size='40')
+      br
+      input(type='submit', value='save')

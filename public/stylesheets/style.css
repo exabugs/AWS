@@ -1,0 +1,45 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+img.icon {
+    vertical-align: bottom;
+    width: 18px;
+    height: 18px;
+}
+
+td.icon {
+    text-align: center;
+}
+
+pre, code, var, samp, kbd, .mono {
+    font-family: Consolas, 'Courier New', Courier, Monaco, monospace;
+/*
+    font-size: 14px;
+    line-height: 1.2;
+*/
+}
+
+video {
+    width: 480px;
+    height: 270px;
+    border: 1px solid black;
+}
+
+.video-container {
+    display: inline-block;
+    text-align: center;
+}
+
+/*
+dataTable 1.9.4 → X.X.X
+*/
+table.dataTable th.right,
+table.dataTable td.right {
+    text-align: right;
+}

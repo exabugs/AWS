@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+
+  p
+    a(href="/files/list") TopPage
+
+  div.video-container
+    p= name
+    video(preload="none", controls, poster="thumbnail/00001.png")
+      source(src="data.m3u8", type='application/x-mpegURL')
+      source(src="data.mp4",  type='video/mp4')
+      source(src="data.ogv",  type='video/ogg')

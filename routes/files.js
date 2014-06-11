@@ -261,11 +261,13 @@ router.get('/:id', function (req, res) {
       console.log('if-modified-since : ' + ims);
       console.log('');
 
+      var moment_ims = moment(ims).unix();
+      var moment_uld = moment(uld).unix();
       // For Test.
       if (req.query.forbidden && forbidden % 2 === 0) { // 4000msec毎に権限あり・なしを切り替える(テスト)
         res.removeHeader('Cache-Control');
         res.send(403); // Forbidden
-      } else if (ims && uld && moment(uld).isSame(ims)) {
+      } else if (ims && uld && moment_uld == moment_ims) {
         res.removeHeader('Cache-Control');
         res.send(304); // Not Modified.
       } else {
@@ -629,9 +631,11 @@ function send_direct(params, res, index, callback) {
       var header = {'Content-Type': data.ContentType};
       if (index) {
         header['Cache-Control'] = cache_control(index.cache);
+        if (index.uploadDate) {
+          // UTCで返すこと
+          header['Last-Modified'] = index.uploadDate.toUTCString();
+        }
       }
-      //header['Last-Modified'] = data.LastModified;
-      header['Last-Modified'] = index.uploadDate;
       res.writeHead(200, header);
       res.write(data.Body);
       res.end();

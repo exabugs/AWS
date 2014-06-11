@@ -505,8 +505,8 @@ function updateMetaInfo(key, callback) {
 /**
  * ただ自分自身に上書きするテスト
  */
-router.get('/rewrite/:id', function (req, res) {
-  rewriteS3Object(req.params.id, function (err, result) {
+router.get('/update_test/:id', function (req, res) {
+  update_test(req.params.id, function (err, result) {
     if (err) {
       res.send(err);
     } else {
@@ -515,6 +515,24 @@ router.get('/rewrite/:id', function (req, res) {
   });
 });
 
+function update_test(_id, callback) {
+  DB.open(function (err, db) {
+    if (err) {
+      callback(err);
+    } else {
+      var con = {_id: new ObjectID(_id)};
+      var values = {
+        uploadDate: new Date()
+      };
+      var set = {$set: values};
+      db.collection("files").findAndModify(con, [], set, function (err, result) {
+        db.close();
+        callback(err, result);
+      });
+    }
+  });
+}
+/*
 function rewriteS3Object(key, callback) {
   var params = {Bucket: Bucket, Key: key};
   var s3 = new AWS.S3();
@@ -527,7 +545,7 @@ function rewriteS3Object(key, callback) {
     });
   });
 }
-
+*/
 function reverseUpdateMetaInfo(key, callback) {
   // 情報設定 MongoDB → S3
   // CacheーControll
@@ -612,7 +630,8 @@ function send_direct(params, res, index, callback) {
       if (index) {
         header['Cache-Control'] = cache_control(index.cache);
       }
-      header['Last-Modified'] = data.LastModified;
+      //header['Last-Modified'] = data.LastModified;
+      header['Last-Modified'] = index.uploadDate;
       res.writeHead(200, header);
       res.write(data.Body);
       res.end();

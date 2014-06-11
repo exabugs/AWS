@@ -61,8 +61,8 @@ $(document).ready(function () {
               item._play = '<a href="' + item._id + '/video/"><img class="icon" src="/images/play.png"/></a>';
             }
             if (item.uploadDate) {
-              item.uploadDate = (moment(item.uploadDate)).format('YYYY-MM-DD HH:mm:ss');
-              //item.uploadDate = '<a href="rewrite/' + item._id + '">' + (moment(item.uploadDate)).format('YYYY-MM-DD HH:mm:ss') + '</a>';
+              //item.uploadDate = (moment(item.uploadDate)).format('YYYY-MM-DD HH:mm:ss');
+              item.uploadDate = '<span name="update_test" _id="' + item._id + '">' + (moment(item.uploadDate)).format('YYYY-MM-DD HH:mm:ss') + '</span>';
             }
             if (item.length) {
               item.length = numeral(item.length).format('0,0');
@@ -133,6 +133,16 @@ $(document).ready(function () {
         });
       }
     }
+    if ("update_test" === $(event.target).attr("name")) {
+      $.ajax({
+        url: '/files/update_test/' + _id,
+        type: 'GET',
+        success: function (result) {
+          refresh();
+        }
+      });
+    }
+
     put_checkbox(event, _id, 'direct');
 
     put_checkbox(event, _id, 'public');

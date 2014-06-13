@@ -255,7 +255,7 @@ router.get('/:id', function (req, res) {
       var ims = req.headers['if-modified-since'];
       var uld = index.uploadDate;
 
-      var forbidden = Math.ceil(((new Date()).getTime() / 4000));
+      var forbidden = Math.ceil(((new Date()).getTime() / 30000));
 
       console.log('timestamp : ' + forbidden);
       console.log('if-modified-since : ' + ims);
@@ -320,7 +320,7 @@ function list(params, callback) {
             sort: sort,
             limit: params.iDisplayLength,
             skip: params.iDisplayStart
-          }
+          };
           collection.find(condition, option).toArray(function (err, results) {
             db.close();
             callback(null, {
@@ -535,43 +535,42 @@ function update_test(_id, callback) {
   });
 }
 /*
-function rewriteS3Object(key, callback) {
-  var params = {Bucket: Bucket, Key: key};
-  var s3 = new AWS.S3();
-  // 既存オブジェクトの更新ができないので自分自身にコピー
-  s3.headObject(params, function (err, data) {
-    params.CopySource = [Bucket, key].join('/');
-    //params.MetadataDirective = 'COPY';
-    s3.copyObject(params, function (err, data) {
-      callback(err, data);
-    });
-  });
-}
-*/
+ function rewriteS3Object(key, callback) {
+ var params = {Bucket: Bucket, Key: key};
+ var s3 = new AWS.S3();
+ // 既存オブジェクトの更新ができないので自分自身にコピー
+ s3.headObject(params, function (err, data) {
+ params.CopySource = [Bucket, key].join('/');
+ //params.MetadataDirective = 'COPY';
+ s3.copyObject(params, function (err, data) {
+ callback(err, data);
+ });
+ });
+ }
+ */
 function reverseUpdateMetaInfo(key, callback) {
   // 情報設定 MongoDB → S3
   // CacheーControll
-  /*
-   getIndex({Key: key}, function (err, index) {
-   if (err) {
-   callback(err);
-   } else {
-   var cache = cache_control(index.cache);
-   var params = {Bucket: Bucket, Key: key};
-   var s3 = new AWS.S3();
-   // 既存オブジェクトの更新ができないので自分自身にコピー
-   s3.headObject(params, function (err, data) {
-   params.CopySource = [Bucket, key].join('/');
-   params.Metadata = data.Metadata;
-   params.MetadataDirective = 'REPLACE';
-   params.Metadata['Cache-Control'] = cache;
-   s3.copyObject(params, function (err, data) {
-   callback(err, data);
-   });
-   });
-   }
-   });
-   */
+  getIndex({Key: key}, function (err, index) {
+    if (err) {
+      callback(err);
+    } else {
+      var cache = cache_control(index.cache);
+      var params = {Bucket: Bucket, Key: key};
+      var s3 = new AWS.S3();
+      // 既存オブジェクトの更新ができないので自分自身にコピー
+      s3.headObject(params, function (err, data) {
+        params.CopySource = [Bucket, key].join('/');
+        params.Metadata = data.Metadata;
+        params.MetadataDirective = 'REPLACE';
+        params.ContentType = data.ContentType;
+        params.CacheControl = cache;
+        s3.copyObject(params, function (err, result) {
+          callback(err, result);
+        });
+      });
+    }
+  });
 }
 
 router.get('/:id/video/', function (req, res) {
